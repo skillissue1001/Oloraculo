@@ -1,3 +1,9 @@
+# Holi.
+En este repo vas a encontrar todo el código del proyecto Oloráculo: un oráculo del mundial que funciona como huele. 
+
+## [Video con lore y explicación](https://youtu.be/cvPeS0qAikw?si=yHv5wKkk5lqgYXhn)
+
+
 # Oloraculo
 
 Oloraculo is a .NET 9 Blazor Server app for predicting the 2026 FIFA World Cup. It builds predictions as a small model ladder, explains which model was used, and can run a Monte Carlo simulation of the full tournament.
