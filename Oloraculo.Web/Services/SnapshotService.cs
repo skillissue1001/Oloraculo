@@ -106,6 +106,9 @@ namespace Oloraculo.Web.Services
                 prediction.ExpectedHomeGoals,
                 prediction.ExpectedAwayGoals,
                 MostLikelyScore = prediction.MostLikelyScore is null ? null : new ScorePayload(prediction.MostLikelyScore.Value.Home, prediction.MostLikelyScore.Value.Away),
+                RepresentativeScore = prediction.RepresentativeScore is null ? null : new ScorePayload(prediction.RepresentativeScore.Value.Home, prediction.RepresentativeScore.Value.Away),
+                prediction.TotalGoals3PlusProbability,
+                prediction.TotalGoals4PlusProbability,
                 prediction.Explanation,
                 prediction.FeaturesUsed,
                 prediction.FeaturesMissing,
@@ -329,6 +332,9 @@ namespace Oloraculo.Web.Services
                 ExpectedHomeGoals = stored.ExpectedHomeGoals,
                 ExpectedAwayGoals = stored.ExpectedAwayGoals,
                 MostLikelyScore = stored.MostLikelyScore,
+                RepresentativeScore = stored.RepresentativeScore,
+                TotalGoals3PlusProbability = stored.TotalGoals3PlusProbability,
+                TotalGoals4PlusProbability = stored.TotalGoals4PlusProbability,
                 Explanation = FirstNonEmpty(stored.Explanation, snapshot.Explanation) ?? "",
                 FeaturesUsed = stored.FeaturesUsed ?? [],
                 FeaturesMissing = stored.FeaturesMissing ?? [],
@@ -467,6 +473,9 @@ namespace Oloraculo.Web.Services
                     ExpectedHomeGoals = ReadDouble(root, "ExpectedHomeGoals"),
                     ExpectedAwayGoals = ReadDouble(root, "ExpectedAwayGoals"),
                     MostLikelyScore = ReadScore(root, "MostLikelyScore"),
+                    RepresentativeScore = ReadScore(root, "RepresentativeScore"),
+                    TotalGoals3PlusProbability = ReadDouble(root, "TotalGoals3PlusProbability"),
+                    TotalGoals4PlusProbability = ReadDouble(root, "TotalGoals4PlusProbability"),
                     Explanation = ReadString(root, "Explanation"),
                     FeaturesUsed = ReadStringList(root, "FeaturesUsed"),
                     FeaturesMissing = ReadStringList(root, "FeaturesMissing"),
@@ -715,6 +724,9 @@ namespace Oloraculo.Web.Services
             public double? ExpectedHomeGoals { get; init; }
             public double? ExpectedAwayGoals { get; init; }
             public (int Home, int Away)? MostLikelyScore { get; init; }
+            public (int Home, int Away)? RepresentativeScore { get; init; }
+            public double? TotalGoals3PlusProbability { get; init; }
+            public double? TotalGoals4PlusProbability { get; init; }
             public string? Explanation { get; init; }
             public IReadOnlyList<string>? FeaturesUsed { get; init; }
             public IReadOnlyList<string>? FeaturesMissing { get; init; }

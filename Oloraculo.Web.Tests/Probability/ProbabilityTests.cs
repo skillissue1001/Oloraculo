@@ -54,4 +54,19 @@ public class ProbabilityTests : TestFixtures
         Assert.NotEqual((0, 0), dist.MostLikelyScoreline());
     }
 
+    [Fact]
+    public void ScorelineDistribution_SummarizesGoalTotals()
+    {
+        var dist = ProbabilityHelper.PoissonScoreline(1.34, 1.28);
+        var representative = dist.RepresentativeScoreline();
+
+        Assert.InRange(dist.ExpectedTotalGoals(), 2.5, 2.7);
+        Assert.Equal(1.0, dist.ProbabilityTotalGoalsAtLeast(0), 6);
+        Assert.Equal(0.0, dist.ProbabilityTotalGoalsAtLeast((dist.MaxGoals * 2) + 1), 6);
+        Assert.Equal(
+            (int)Math.Round(dist.ExpectedTotalGoals(), MidpointRounding.AwayFromZero),
+            representative.Home + representative.Away);
+        Assert.NotEqual(dist.MostLikelyScoreline(), representative);
+    }
+
 }

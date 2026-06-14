@@ -225,15 +225,26 @@ namespace Oloraculo.Web.Services
 
         private static string ResultOrPickText(Fixture fixture, MatchPrediction prediction)
         {
-            var predictionText = PredictionText(prediction);
+            var predictionText = PredictionPickText(prediction);
+            var goalBandText = GoalBandText(prediction);
             if (fixture.IsPlayed && fixture.HomeGoals.HasValue && fixture.AwayGoals.HasValue)
-                return $"**{fixture.HomeGoals}-{fixture.AwayGoals}** <br><sub>Prediction: {predictionText}</sub>";
+            {
+                var compactPrediction = string.IsNullOrWhiteSpace(goalBandText)
+                    ? predictionText
+                    : $"{predictionText}; {goalBandText}";
+                return $"**{fixture.HomeGoals}-{fixture.AwayGoals}** <br><sub>Prediction: {compactPrediction}</sub>";
+            }
 
-            return predictionText;
+            return string.IsNullOrWhiteSpace(goalBandText)
+                ? predictionText
+                : $"{predictionText} <br><sub>{goalBandText}</sub>";
         }
 
-        private static string PredictionText(MatchPrediction prediction)
+        private static string PredictionPickText(MatchPrediction prediction)
         {
+            if (prediction.RepresentativeScore is { } representative)
+                return $"{representative.Home}-{representative.Away}";
+
             if (prediction.MostLikelyScore is { } score)
                 return $"{score.Home}-{score.Away}";
 
@@ -245,6 +256,22 @@ namespace Oloraculo.Web.Services
                 _ => "-"
             };
         }
+
+        private static string GoalBandText(MatchPrediction prediction)
+        {
+            var parts = new List<string>();
+            if (prediction.TotalGoals3PlusProbability.HasValue)
+                parts.Add($"3+ goles {Percent(prediction.TotalGoals3PlusProbability.Value, 0)}");
+            if (prediction.TotalGoals4PlusProbability.HasValue)
+                parts.Add($"4+ {Percent(prediction.TotalGoals4PlusProbability.Value, 0)}");
+            if (prediction.MostLikelyScore is { } modal && ScoresDiffer(modal, prediction.RepresentativeScore))
+                parts.Add($"modal {modal.Home}-{modal.Away}");
+
+            return string.Join("; ", parts);
+        }
+
+        private static bool ScoresDiffer((int Home, int Away)? left, (int Home, int Away)? right) =>
+            left.HasValue && (!right.HasValue || left.Value.Home != right.Value.Home || left.Value.Away != right.Value.Away);
 
         private static string StatusText(Fixture fixture)
         {

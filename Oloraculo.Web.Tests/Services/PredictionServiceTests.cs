@@ -39,6 +39,28 @@ public class PredictionServiceTests : TestFixtures
     }
 
     [Fact]
+    public async Task PredictionService_ImportedFixtureGoalBandsStayRealistic()
+    {
+        await using var db = await ImportedDb();
+        var fixtures = await db.Fixtures.AsNoTracking().ToListAsync();
+        var service = new PredictionService(db, SimulationOptions(1, 1));
+
+        var results = await service.PredictFixturesAsync(fixtures);
+        var finalPredictions = results.Select(result => result.BestPrediction).ToList();
+        var average3Plus = finalPredictions.Average(prediction => prediction.TotalGoals3PlusProbability ?? 0);
+        var average4Plus = finalPredictions.Average(prediction => prediction.TotalGoals4PlusProbability ?? 0);
+
+        Assert.All(finalPredictions, prediction =>
+        {
+            Assert.NotNull(prediction.RepresentativeScore);
+            Assert.NotNull(prediction.TotalGoals3PlusProbability);
+            Assert.NotNull(prediction.TotalGoals4PlusProbability);
+        });
+        Assert.InRange(average3Plus, .35, .65);
+        Assert.InRange(average4Plus, .15, .45);
+    }
+
+    [Fact]
     public async Task PredictionService_BulkPredictionsMatchSingleFixturePredictions()
     {
         await using var db = await ImportedDb();

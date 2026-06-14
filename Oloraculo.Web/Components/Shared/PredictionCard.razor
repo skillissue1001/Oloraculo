@@ -17,9 +17,21 @@
         <MudText Typo="Typo.caption" Color="Color.Secondary">
             Goles esperados <TeamLabel TeamId="@Prediction.HomeTeamId" Name="@HomeLabel" Compact="true" /> @Prediction.ExpectedHomeGoals.Value.ToString("0.00")
             - @Prediction.ExpectedAwayGoals.Value.ToString("0.00") <TeamLabel TeamId="@Prediction.AwayTeamId" Name="@AwayLabel" Compact="true" />
-            @if (Prediction.MostLikelyScore.HasValue)
+            @if (Prediction.RepresentativeScore.HasValue)
             {
-                <span> | probable @Prediction.MostLikelyScore.Value.Home-@Prediction.MostLikelyScore.Value.Away</span>
+                <span> | referencia @Prediction.RepresentativeScore.Value.Home-@Prediction.RepresentativeScore.Value.Away</span>
+            }
+            @if (Prediction.TotalGoals3PlusProbability.HasValue)
+            {
+                <span> | 3+ goles @Prediction.TotalGoals3PlusProbability.Value.ToString("P0")</span>
+            }
+            @if (Prediction.TotalGoals4PlusProbability.HasValue)
+            {
+                <span> | 4+ @Prediction.TotalGoals4PlusProbability.Value.ToString("P0")</span>
+            }
+            @if (Prediction.MostLikelyScore is { } modal && ScoresDiffer(modal, Prediction.RepresentativeScore))
+            {
+                <span> | modal @modal.Home-@modal.Away</span>
             }
         </MudText>
     }
@@ -75,4 +87,7 @@
     [Parameter] public string HomeLabel { get; set; } = "Local";
     [Parameter] public string AwayLabel { get; set; } = "Visitante";
     [Parameter] public bool ShowDetails { get; set; } = true;
+
+    private static bool ScoresDiffer((int Home, int Away)? left, (int Home, int Away)? right) =>
+        left.HasValue && (!right.HasValue || left.Value.Home != right.Value.Home || left.Value.Away != right.Value.Away);
 }

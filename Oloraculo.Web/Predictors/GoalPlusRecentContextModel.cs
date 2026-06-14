@@ -78,6 +78,7 @@ namespace Oloraculo.Web.Predictors
             }
 
             var scoreline = _goalModel.BuildScoreline(homeGoals, awayGoals);
+            var representative = scoreline.RepresentativeScoreline();
             usedFeatures.AddRange(
             [
                 "Fuerza de ataque ajustada por rival",
@@ -102,6 +103,9 @@ namespace Oloraculo.Web.Predictors
                 ExpectedAwayGoals = Math.Round(awayGoals, 2),
                 Scoreline = scoreline,
                 MostLikelyScore = scoreline.MostLikelyScoreline(),
+                RepresentativeScore = representative,
+                TotalGoals3PlusProbability = scoreline.ProbabilityTotalGoalsAtLeast(3),
+                TotalGoals4PlusProbability = scoreline.ProbabilityTotalGoalsAtLeast(4),
                 Explanation = appliedContext
                     ? $"Modelo de goles ajustado con contexto de fuentes. Goles esperados: {context.HomeTeam.Name} {homeGoals:0.00} - {awayGoals:0.00} {context.AwayTeam.Name}."
                     : $"Ningún contexto de fuentes modificó el modelo de goles. Goles esperados: {context.HomeTeam.Name} {homeGoals:0.00} - {awayGoals:0.00} {context.AwayTeam.Name}.",

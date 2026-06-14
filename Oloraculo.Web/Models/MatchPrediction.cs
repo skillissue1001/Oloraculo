@@ -14,6 +14,9 @@ namespace Oloraculo.Web.Models
         public double? ExpectedAwayGoals { get; set; }
         public ScorelineDistribution? Scoreline { get; set; }
         public (int Home, int Away)? MostLikelyScore { get; set; }
+        public (int Home, int Away)? RepresentativeScore { get; set; }
+        public double? TotalGoals3PlusProbability { get; set; }
+        public double? TotalGoals4PlusProbability { get; set; }
         public string Explanation { get; set; }
         public IReadOnlyList<string> Drivers { get; init; } = [];
         public IReadOnlyList<string> FeaturesUsed { get; init; } = [];

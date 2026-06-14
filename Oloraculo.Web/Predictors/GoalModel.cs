@@ -32,6 +32,7 @@ namespace Oloraculo.Web.Predictors
             var (homeGoals, awayGoals, degraded) = ExpectedGoals(context);
             var scoreline = BuildScoreline(homeGoals, awayGoals);
             var mostLikely = scoreline.MostLikelyScoreline();
+            var representative = scoreline.RepresentativeScoreline();
 
             return new MatchPrediction
             {
@@ -45,8 +46,11 @@ namespace Oloraculo.Web.Predictors
                 ExpectedAwayGoals = Math.Round(awayGoals, 2),
                 Scoreline = scoreline,
                 MostLikelyScore = mostLikely,
+                RepresentativeScore = representative,
+                TotalGoals3PlusProbability = scoreline.ProbabilityTotalGoalsAtLeast(3),
+                TotalGoals4PlusProbability = scoreline.ProbabilityTotalGoalsAtLeast(4),
                 Explanation = $"Goles esperados: {context.HomeTeam.Name} {homeGoals:0.00} - {awayGoals:0.00} {context.AwayTeam.Name}, ajustado con {_matchesUsed} resultados históricos en una ventana de {_yearsWindow} años.",
-                Drivers = [$"Marcador más probable: {mostLikely.Home}-{mostLikely.Away}"],
+                Drivers = [$"Marcador de referencia: {representative.Home}-{representative.Away}; marcador modal: {mostLikely.Home}-{mostLikely.Away}"],
                 FeaturesUsed =
                 [
                     "Fuerza de ataque ajustada por rival",

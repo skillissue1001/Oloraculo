@@ -129,6 +129,9 @@ public abstract class TestFixtures
         Assert.Equal(expected.ExpectedHomeGoals, actual.ExpectedHomeGoals);
         Assert.Equal(expected.ExpectedAwayGoals, actual.ExpectedAwayGoals);
         Assert.Equal(expected.MostLikelyScore, actual.MostLikelyScore);
+        Assert.Equal(expected.RepresentativeScore, actual.RepresentativeScore);
+        Assert.Equal(expected.TotalGoals3PlusProbability, actual.TotalGoals3PlusProbability);
+        Assert.Equal(expected.TotalGoals4PlusProbability, actual.TotalGoals4PlusProbability);
         Assert.Equal(expected.Degraded, actual.Degraded);
         Assert.Equal(expected.FeaturesMissing, actual.FeaturesMissing);
         AssertScorelineEqual(expected.Scoreline, actual.Scoreline);

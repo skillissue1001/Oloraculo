@@ -122,6 +122,9 @@ public class SnapshotServiceTests : TestFixtures
         first.ExpectedHomeGoals = 1.4;
         first.ExpectedAwayGoals = .9;
         first.MostLikelyScore = (1, 0);
+        first.RepresentativeScore = (2, 1);
+        first.TotalGoals3PlusProbability = .48;
+        first.TotalGoals4PlusProbability = .27;
         second.FixtureId = "f2";
         second.HomeTeamId = "c";
         second.AwayTeamId = "d";
@@ -187,6 +190,9 @@ public class SnapshotServiceTests : TestFixtures
         Assert.Equal("Legacy", loaded.Prediction!.BestPrediction.PredictorName);
         Assert.Equal("a", loaded.Prediction.BestPrediction.HomeTeamId);
         Assert.Equal(.6, loaded.Prediction.BestPrediction.Outcome.HomeWin);
+        Assert.Null(loaded.Prediction.BestPrediction.RepresentativeScore);
+        Assert.Null(loaded.Prediction.BestPrediction.TotalGoals3PlusProbability);
+        Assert.Null(loaded.Prediction.BestPrediction.TotalGoals4PlusProbability);
     }
 
     [Fact]

@@ -36,6 +36,11 @@ public class PredictorTests : TestFixtures
         Assert.False(prediction.Degraded);
         Assert.NotNull(prediction.Scoreline);
         Assert.True(prediction.ExpectedHomeGoals > 0.1);
+        Assert.NotNull(prediction.RepresentativeScore);
+        Assert.NotNull(prediction.TotalGoals3PlusProbability);
+        Assert.NotNull(prediction.TotalGoals4PlusProbability);
+        Assert.InRange(prediction.TotalGoals3PlusProbability.Value, 0, 1);
+        Assert.InRange(prediction.TotalGoals4PlusProbability.Value, 0, 1);
         Assert.True(prediction.Outcome.IsValid);
     }
 
@@ -150,6 +155,23 @@ public class PredictorTests : TestFixtures
         Assert.DoesNotContain(final.Drivers, d => d.Contains("calibración Elo/FIFA"));
         Assert.DoesNotContain(SourceMetadata.FifaRankings, final.Sources);
         Assert.DoesNotContain(SourceMetadata.EloRatings, final.Sources);
+    }
+
+    [Fact]
+    public void FinalSelector_CopiesGoalBandDisplayMetadata()
+    {
+        var goal = Prediction(4, "Goal", .45, .35, .20);
+        goal.MostLikelyScore = (1, 1);
+        goal.RepresentativeScore = (2, 1);
+        goal.TotalGoals3PlusProbability = .48;
+        goal.TotalGoals4PlusProbability = .27;
+
+        var final = FinalPredictionSelector.Select([goal]);
+
+        Assert.Equal((1, 1), final.MostLikelyScore);
+        Assert.Equal((2, 1), final.RepresentativeScore);
+        Assert.Equal(.48, final.TotalGoals3PlusProbability);
+        Assert.Equal(.27, final.TotalGoals4PlusProbability);
     }
 
 }

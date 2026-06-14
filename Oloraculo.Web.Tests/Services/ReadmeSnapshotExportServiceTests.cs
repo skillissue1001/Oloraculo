@@ -205,7 +205,10 @@ public class ReadmeSnapshotExportServiceTests : TestFixtures
             DateTimeOffset.Parse("2026-01-02T00:00:00Z"));
 
         Assert.Contains("| <img", rendered);
-        Assert.Contains("1-0", rendered);
+        Assert.Contains("2-1", rendered);
+        Assert.Contains("3+ goles", rendered);
+        Assert.Contains("4+", rendered);
+        Assert.Contains("modal 1-0", rendered);
         Assert.Contains("60", rendered);
         Assert.Contains("%", rendered);
     }
@@ -272,6 +275,9 @@ public class ReadmeSnapshotExportServiceTests : TestFixtures
             PredictorPriority = 5,
             Outcome = new OutcomeProbabilities(.6, .25, .15),
             MostLikelyScore = (1, 0),
+            RepresentativeScore = (2, 1),
+            TotalGoals3PlusProbability = .48,
+            TotalGoals4PlusProbability = .27,
             Explanation = "test"
         }
     };

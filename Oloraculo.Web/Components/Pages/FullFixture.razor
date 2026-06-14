@@ -397,8 +397,11 @@
         if (fixture.IsPlayed && fixture.HomeGoals.HasValue && fixture.AwayGoals.HasValue)
             return $"{fixture.HomeGoals}-{fixture.AwayGoals}";
 
-        if (prediction?.BestPrediction.MostLikelyScore is { } score)
-            return $"{score.Home}-{score.Away}";
+        if (prediction?.BestPrediction.RepresentativeScore is { } representative)
+            return $"{representative.Home}-{representative.Away}";
+
+        if (prediction?.BestPrediction.MostLikelyScore is { } modal)
+            return $"{modal.Home}-{modal.Away}";
 
         return prediction?.BestPrediction.Outcome.TopPick switch
         {
